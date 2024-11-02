@@ -1,0 +1,15 @@
+---
+title: "TEST"
+output: html_document
+params:
+  list_of_plates: !r NULL
+---
+Report generated on:  `r format(Sys.time(), "%d-%m-%Y %H:%M:%S")`.  
+------------------
+
+### &nbsp;
+
+<hr />
+<p style="text-align: center;">Generated using the <a href="https://github.com/mini-pw/PvSTATEM">PvSTATEM </a> package </p>
+
+

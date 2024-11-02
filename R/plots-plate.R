@@ -1,18 +1,19 @@
-#' Plot a 96-well plate with colored wells
+#' Plot a 96-well plate with coloured wells
 #'
-#' It is a generic function to plot a 96-well plate with colored wells
+#' It is a generic function to plot a 96-well plate with coloured wells
 #' used by other functions in this package, mainly to plot layout and counts.
 #' The function uses a background image of a 96-well plate and
-#' plots the colors in the wells using ggplot2.
-#' This function is not intended to be used directly by the user.
-#' Rather, it is used by other functions, specified in this file.
+#' plots the colours in the wells using ggplot2.
+#' This function is not intended for the user to use directly.
+#' Rather, it is used by other functions specified in this file.
 #'
-#' @param colors A vector with 96 colors that will be used to color the wells, order is from left to right and top to bottom
+#' @param colours A vector with 96 colours will be used to colour the wells; the order is from left to right and top to bottom
 #' @param plot_numbers Logical value indicating if the well numbers should be plotted, default is `FALSE`
-#' @param numbers An optional vector with 96 numbers, plotted on the wells. Order is from left to right and top to bottom, must have the same length as colors. It could be used, for instance, to plot the bead count of each well. Must be provided in case the `plot_numbers` parameters is set to `TRUE`
+#' @param numbers An optional vector with 96 numbers plotted on the wells. Order is from left to right and top to bottom and must have the same length as colours.
+#' It could be used, for instance, to plot the bead count of each well. Must be provided in case the `plot_numbers` parameter is set to `TRUE`
 #' @param plot_title The title of the plot (default is "Plate")
 #' @param plot_legend Logical value indicating if the legend should be plotted, default is `FALSE`
-#' @param legend_mapping A named vector with the colors mapping used to create the legend
+#' @param legend_mapping A named vector with the colour mapping used to create the legend
 #'
 #' @return A ggplot object
 #'
@@ -22,10 +23,10 @@
 #' @importFrom grDevices dev.size
 #'
 #' @keywords internal
-plot_plate <- function(colors, plot_numbers = FALSE, numbers = NULL, plot_title = "Plate",
+plot_plate <- function(colours, plot_numbers = FALSE, numbers = NULL, plot_title = "Plate",
                        plot_legend = FALSE, legend_mapping = NULL) {
-  if (length(colors) != 96) {
-    stop("The colors vector must have 96 elements")
+  if (length(colours) != 96) {
+    stop("The colours vector must have 96 elements")
   }
 
   if (plot_numbers && is.null(numbers)) {
@@ -40,8 +41,8 @@ plot_plate <- function(colors, plot_numbers = FALSE, numbers = NULL, plot_title 
     stop("The legend_mapping vector must always be provided")
   }
 
-  if (length(legend_mapping) < length(unique(colors))) {
-    stop("The legend_mapping vector must have at least the same length as the unique colors")
+  if (length(legend_mapping) < length(unique(colours))) {
+    stop("The legend_mapping vector must have at least the same length as the unique colours")
   }
 
   # Load the background image
@@ -54,8 +55,8 @@ plot_plate <- function(colors, plot_numbers = FALSE, numbers = NULL, plot_title 
     y = seq(0.904, 0.095, length.out = 8)
   )
 
-  # Add colors to the well positions data frame
-  well_positions$color <- colors
+  # Add colours to the well positions data frame
+  well_positions$color <- colours
   well_positions$numbers <- numbers
 
   # Define the aspect ratio of the background image
@@ -97,7 +98,7 @@ plot_plate <- function(colors, plot_numbers = FALSE, numbers = NULL, plot_title 
   if (plot_numbers) {
     p <- p + geom_text(
       aes(label = numbers),
-      size = 15 * runit, color = "black", vjust = 0.5, hjust = 0.5, fontface = "bold"
+      size = 30 * runit, color = "black", vjust = 0.5, hjust = 0.5, fontface = "bold"
     )
   }
 
@@ -111,17 +112,17 @@ plot_plate <- function(colors, plot_numbers = FALSE, numbers = NULL, plot_title 
 
 #' Plot counts in a 96-well plate
 #'
-#' This is a function used to plot counts in a 96-well plate using a color to represent the count ranges.
-#' There is possibility to plot exact counts in each well. \cr \cr
-#' If plot window is resized, it's best to re-run the function to adjust the scaling.
-#' Sometimes when legend is plotted, whole layout may be shifted, then it's best to stretch the window, and everything will be adjusted automatically.
+#' This function plots counts in a 96-well plate using a colour to represent the count ranges.
+#' There is a possibility of plotting exact counts in each well. \cr \cr
+#' If the plot window is resized, it's best to re-run the function to adjust the scaling.
+#' Sometimes, when a legend is plotted, the whole layout may be shifted. It's best to stretch the window, and everything will be adjusted automatically.
 #'
 #' @param plate The plate object with the counts data
 #' @param analyte_name The name of the analyte
 #' @param plot_counts Logical indicating if the counts should be plotted
 #' @param plot_legend Logical indicating if the legend should be plotted
-#' @param lower_threshold The lower threshold for the counts, it separates green and yellow colors
-#' @param higher_threshold The higher threshold for the counts, it separates yellow and red colors
+#' @param lower_threshold The lower threshold for the counts, it separates green and yellow colours
+#' @param higher_threshold The higher threshold for the counts, it separates yellow and red colours
 #'
 #' @return A ggplot object
 #'
@@ -173,7 +174,7 @@ plot_counts <- function(plate, analyte_name, plot_counts = TRUE, plot_legend = F
     # it is a space because otherwise "missing" would be included in legend
   )
 
-  # mapping function from counts to colors
+  # mapping function from counts to colours
   map_to_color <- function(count, lower_threshold, higher_threshold) {
     count <- as.integer(ifelse(count == " ", -1, count))
     if (count < 0) {
@@ -191,10 +192,10 @@ plot_counts <- function(plate, analyte_name, plot_counts = TRUE, plot_legend = F
 
 
   # Apply the mapping function to the counts vector
-  colors <- sapply(counts, map_to_color, lower_threshold = lower_threshold, higher_threshold = higher_threshold)
+  colours <- sapply(counts, map_to_color, lower_threshold = lower_threshold, higher_threshold = higher_threshold)
   title <- paste("Counts for", analyte_name)
 
-  plot_plate(colors, plot_title = title, plot_numbers = plot_counts, numbers = counts, plot_legend = plot_legend, legend_mapping = color_map)
+  plot_plate(colours, plot_title = title, plot_numbers = plot_counts, numbers = counts, plot_legend = plot_legend, legend_mapping = color_map)
 }
 
 
@@ -202,9 +203,9 @@ plot_counts <- function(plate, analyte_name, plot_counts = TRUE, plot_legend = F
 #' Plot layout of a 96-well plate
 #'
 #' @description
-#' This is a function used to plot the layout of a 96-well plate using a color to represent the sample types. \cr \cr
-#' If plot window is resized, it's best to re-run the function to adjust the scaling.
-#' Sometimes when legend is plotted, whole layout may be shifted, then it's best to stretch the window, and everything will be adjusted automatically.
+#' This function plots the layout of a 96-well plate using a colour to represent the sample types. \cr \cr
+#' If the plot window is resized, it's best to re-run the function to adjust the scaling.
+#' Sometimes, the whole layout may be shifted when a legend is plotted. It's best to stretch the window, and everything will be adjusted automatically.
 #'
 #'
 #' @param plate The plate object with the layout information
@@ -258,11 +259,11 @@ plot_layout <- function(plate, plot_legend = TRUE) {
   }
 
   # Apply the mapping function to the sample_types vector
-  colors <- sapply(sample_types, map_to_color)
+  colours <- sapply(sample_types, map_to_color)
 
   title <- paste("Layout of", plate_name)
 
-  plot_plate(colors, plot_title = title, plot_numbers = FALSE, plot_legend = plot_legend, legend_mapping = color_map)
+  plot_plate(colours, plot_title = title, plot_numbers = FALSE, plot_legend = plot_legend, legend_mapping = color_map)
 }
 
 #' @title Remove holes from a vector

@@ -21,9 +21,12 @@ plate <- read_luminex_data(plate_filepath, layout_filepath) # read the data
 plate
 
 ## -----------------------------------------------------------------------------
-tmp_dir <- tempdir(check = TRUE)
-test_output_path <- file.path(tmp_dir, "output.csv")
-process_plate(plate, output_path = test_output_path)
+example_dir <- tempdir(check = TRUE) # create a temporary directory to store the output
+df <- process_plate(plate, output_dir = example_dir)
+colnames(df)
+
+## -----------------------------------------------------------------------------
+df[1:5, 1:5]
 
 ## -----------------------------------------------------------------------------
 plate$summary()
@@ -71,7 +74,22 @@ plot_standard_curve_analyte_with_model(plate, model, log_scale = c("all"), plot_
 mfi_values <- plate$data$Median$OC43_S
 head(mfi_values)
 
-predicted_dilutions <- predict(model, mfi_values)
+predicted_rau <- predict(model, mfi_values)
 
-head(predicted_dilutions)
+head(predicted_rau)
+
+## -----------------------------------------------------------------------------
+model <- create_standard_curve_model_analyte(plate, analyte_name = "Spike_6P")
+plot_standard_curve_analyte_with_model(plate, model, log_scale = c("all"))
+
+## -----------------------------------------------------------------------------
+plot_standard_curve_analyte_with_model(plate, model, log_scale = c("all"), over_max_extrapolation = 100000)
+
+## -----------------------------------------------------------------------------
+nmfi_values <- get_nmfi(plate)
+
+# process plate with nMFI normalisation
+
+df <- process_plate(plate, output_dir = example_dir, normalisation_type = "nMFI")
+df[1:5, 1:5]
 
