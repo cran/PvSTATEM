@@ -160,3 +160,78 @@ test_that("Test validate_filepath_and_output_dir function", {
 
   expect_true(dir.exists(file.path(tmp_dir, "output")))
 })
+
+test_that("Test path checking", {
+  plate1_filepath <- system.file("extdata", "CovidOISExPONTENT.csv", package = "PvSTATEM", mustWork = TRUE) # get the filepath of the csv dataset
+  plate2_filepath <- system.file("extdata", "CovidOISExPONTENT_CO.csv", package = "PvSTATEM", mustWork = TRUE) # get the filepath of the csv dataset
+  plate1_rel_filepath <- fs::path_rel(plate1_filepath, start = getwd())
+
+  expect_true(check_path_equal(plate1_filepath, plate1_filepath))
+  expect_true(check_path_equal(plate1_filepath, plate1_rel_filepath))
+  expect_false(check_path_equal(plate1_filepath, plate2_filepath))
+  expect_false(check_path_equal(plate1_filepath, NULL))
+  expect_false(check_path_equal(plate1_filepath, "/tmp/non_existent.tsv"))
+})
+
+test_that("Test mba format function", {
+  expect_true(is_mba_format(PvSTATEM.env$mba_formats[1]))
+  expect_true(is_mba_format(NULL, allow_nullable = TRUE))
+  expect_false(is_mba_format(NULL, allow_nullable = FALSE))
+  expect_false(is_mba_format("invalid", allow_nullable = FALSE))
+})
+
+test_that("Test sorting a list", {
+  l <- list(a = 2, b = 1)
+  sl <- list(b = 1, a = 2)
+  expect_equal(sort_list_by(l, decreasing = FALSE), sl)
+
+  l <- list(a = list(v = 2), b = list(v = 1))
+  sl <- list(b = list(v = 1), a = list(v = 2))
+  expect_equal(sort_list_by(l, decreasing = FALSE, value_f = function(x) x$v), sl)
+})
+
+test_that("Test select columns function", {
+  df <- data.frame(A = 1:3, B = 4:6)
+  result <- select_columns(df, c("A", "B"))
+  expect_equal(result, df)
+
+  result <- select_columns(df, c("A", "B", "C"), replace_value = 0)
+  expected <- data.frame(A = 1:3, B = 4:6, C = c(0, 0, 0))
+  expect_equal(result, expected)
+})
+
+test_that("Test merging dataframes via handles intersection", {
+  df1 <- data.frame(A = 1:3, B = 4:6)
+  df2 <- data.frame(A = 3:5, B = 7:9)
+  df3 <- data.frame(A = 7:9, C = 10:12)
+
+  result1 <- merge_dataframes(list(df1), column_collision_strategy = "intersection")
+  expected1 <- df1
+  expect_equal(result1, expected1)
+
+  result2 <- merge_dataframes(list(df1, df2), column_collision_strategy = "intersection")
+  expected2 <- rbind(df1, df2)
+  expect_equal(result2, expected2)
+
+  result3 <- merge_dataframes(list(df1, df2, df3), column_collision_strategy = "intersection")
+  expected3 <- data.frame(A = c(1:3, 3:5, 7:9))
+  expect_equal(result3, expected3)
+})
+
+test_that("Test merging dataframes via handles union", {
+  df1 <- data.frame(A = 1:3, B = 4:6)
+  df2 <- data.frame(A = 3:5, B = 7:9)
+  df3 <- data.frame(A = 7:9, C = 10:12)
+
+  result1 <- merge_dataframes(list(df1), column_collision_strategy = "union")
+  expected1 <- df1
+  expect_equal(result1, expected1)
+
+  result2 <- merge_dataframes(list(df1, df2), column_collision_strategy = "union", fill_value = NA)
+  expected2 <- rbind(df1, df2)
+  expect_equal(result2, expected2)
+
+  result3 <- merge_dataframes(list(df1, df2, df3), column_collision_strategy = "union", fill_value = NA)
+  expected3 <- data.frame(A = c(1:3, 3:5, 7:9), B = c(4:6, 7:9, rep(NA, 3)), C = c(rep(NA, 3), rep(NA, 3), 10:12))
+  expect_equal(result3, expected3)
+})

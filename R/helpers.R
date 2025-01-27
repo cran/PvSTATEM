@@ -302,3 +302,120 @@ validate_filepath_and_output_dir <- function(filename, output_dir, plate_name, s
 
   return(output_path)
 }
+
+#' @title
+#' Check if two paths are equal
+#'
+#' @description
+#' Function checks if two paths are equal after converting them to absolute paths.
+#'
+#' @param path1 (`character(1)`) The first path to be compared.
+#' @param path2 (`character(1)`) The second path to be compared.
+#'
+#' @return (`logical(1)`) `TRUE` if the paths are equal, `FALSE` otherwise.
+#'
+#' @keywords internal
+check_path_equal <- function(path1, path2) {
+  path1 <- fs::path_abs(path1)
+  path2 <- fs::path_abs(path2)
+  return(identical(path1, path2))
+}
+
+#' @title
+#' Check if a mba format is supported
+#'
+#' @description
+#' Check if a given format is supported.
+#'
+#'
+#' @param format (`character(1`) Format string
+#' @param allow_nullable (`logical(1)`) Set to `TRUE` if a format can be NULL
+#' Defaults to `FALSE`.
+#'
+#' @return (`logical(1)`) `TRUE` if the format is in the supported list, else `FALSE`
+#'
+#' @keywords internal
+is_mba_format <- function(format, allow_nullable = FALSE) {
+  if (is.null(format)) {
+    return(allow_nullable)
+  }
+  return(format %in% PvSTATEM.env$mba_formats)
+}
+
+#' @title
+#' Sort a flat list by value
+#'
+#' @param list_obj A list to sort
+#' @param value_f Function that expects a element of the list
+#' and returns a value to sort the list by.
+#' @param decreasing Should the sorting by decreasing or increasing
+#'
+#' @keywords internal
+sort_list_by <- function(list_obj, decreasing = FALSE, value_f = function(elem) elem) {
+  values <- lapply(list_obj, value_f)
+  values_order <- order(unlist(values), decreasing = decreasing)
+  sorted_names <- names(list_obj)[values_order]
+  list_obj[sorted_names]
+}
+
+#' Select Columns from a DataFrame
+#'
+#' @description
+#' Selects specified columns from a dataframe. If a column
+#' does not exist in the dataframe, it will be added with a specified replacement value.
+#'
+#' @param df A dataframe from which columns are to be selected.
+#' @param columns A vector of column names to select.
+#' @param replace_value Value to use for columns that do not exist in the dataframe. Default is NA.
+#'
+#' @return A dataframe containing the specified columns, with missing columns filled with the replacement value.
+#'
+#' @keywords internal
+#'
+select_columns <- function(df, columns, replace_value = NA) {
+  result_df <- data.frame(lapply(columns, function(col) {
+    if (col %in% names(df)) {
+      df[[col]]
+    } else {
+      replace_value
+    }
+  }))
+  names(result_df) <- columns
+  return(result_df)
+}
+
+#' @title
+#' Merge dataframes
+#'
+#' @description
+#' Merges a list of dataframes by handling column collisions
+#' through specified strategies: "intersection" or "union".
+#'
+#' @param dataframes A list of dataframes to merge.
+#' @param column_collision_strategy A string specifying how to handle column collisions.
+#'        "intersection" keeps only columns present in all dataframes,
+#'        "union" includes all columns from all dataframes, filling missing values.
+#' @param fill_value Value to fill in missing columns if `column_collision_strategy` is "union".
+#'
+#' @return Merged dataframe
+#'
+#' @keywords internal
+#'
+merge_dataframes <- function(dataframes, column_collision_strategy = "intersection", fill_value = NA) {
+  columns <- lapply(dataframes, FUN = function(x) colnames(x))
+  if (column_collision_strategy == "intersection") {
+    columns_intersection <- Reduce(columns, f = base::intersect)
+    dataframes <- lapply(
+      dataframes, function(df) select_columns(df, columns_intersection)
+    )
+  } else if (column_collision_strategy == "union") {
+    columns_union <- Reduce(columns, f = base::union)
+    dataframes <- lapply(
+      dataframes, function(df) select_columns(df, columns_union)
+    )
+  } else {
+    stop("Invalid column collision strategy.")
+  }
+  output_df <- do.call(rbind, dataframes)
+  return(output_df)
+}

@@ -184,7 +184,12 @@ Model <- R6::R6Class(
       )
       mfi <- private$mfi_transform(mfi)
       # Example columns: y, x,
-      df <- nplr::getEstimates(self$model, mfi)
+
+      # As we do not use the confidence intervals, we can
+      # set the number of additional evaluations to 0
+      # to speed up the computation by setting B = 0.
+      # Same with `get_plot_data` method
+      df <- nplr::getEstimates(self$model, mfi, B = 0)
       df <- df[, c("x", "y")]
       # nprl automatically scales the x to non log scale
       df[, "y"] <- original_mfi
@@ -211,7 +216,7 @@ Model <- R6::R6Class(
       lower_bound <- private$mfi_transform(10) # Scaled MFI for MFI = 10
 
       uniform_targets <- seq(lower_bound, upper_bound, length.out = 100)
-      df <- nplr::getEstimates(self$model, targets = uniform_targets)
+      df <- nplr::getEstimates(self$model, targets = uniform_targets, B = 0)
       df[, "y"] <- private$mfi_reverse_transform(df[, "y"])
       cols <- grepl("^x", colnames(df))
       df[, cols] <- dilution_to_rau(df[, cols])
@@ -370,6 +375,10 @@ create_standard_curve_model_analyte <- function(plate, analyte_name,
 #' In that case, MFI values associated with dilutions above (or equal to)
 #' `high_dose_threshold` should be removed from the analysis.
 #'
+#' For more information about this effect please refer to:
+#' Namburi, R. P. et. al. (2014) High-dose hook effect.
+#  DOI: 10.4103/2277-8632.128412
+#'
 #' For the `nplr` model the recommended number of standard curve samples
 #' is at least 4. If the high dose hook effect is detected but the number
 #' of samples below the `high_dose_threshold` is lower than 4,
@@ -381,6 +390,23 @@ create_standard_curve_model_analyte <- function(plate, analyte_name,
 #' @param dilutions (`numeric()`)
 #' @param high_dose_threshold (`numeric(1)`) MFI values associated
 #' with dilutions above this threshold should be checked for the high dose hook effect
+#'
+#' @examples
+#' plate_filepath <- system.file(
+#'   "extdata", "CovidOISExPONTENT.csv",
+#'   package = "PvSTATEM", mustWork = TRUE
+#' ) # get the filepath of the csv dataset
+#' layout_filepath <- system.file(
+#'   "extdata", "CovidOISExPONTENT_layout.xlsx",
+#'   package = "PvSTATEM", mustWork = TRUE
+#' )
+#' plate <- read_luminex_data(plate_filepath, layout_filepath) # read the data
+#'
+#' # here we plot the data with observed high dose hook effect
+#' plot_standard_curve_analyte(plate, "RBD_omicron")
+#'
+#' # here we create the model with the high dose hook effect handled
+#' model <- create_standard_curve_model_analyte(plate, "RBD_omicron")
 #'
 #' @return sample selector (`logical()`)
 handle_high_dose_hook <- function(mfi, dilutions, high_dose_threshold = 1 / 200) {
