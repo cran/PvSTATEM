@@ -4,7 +4,7 @@ Title: Reading, Quality Control and Preprocessing of MBA (Multiplex
         Bead Assay) Data
 Description: Speeds up the process of loading raw data from MBA (Multiplex Bead Assay) examinations, performs quality control checks, and automatically normalises the data, preparing it for more advanced, downstream tasks. The main objective of the package is to create a simple environment for a user, who does not necessarily have experience with R language. The package is developed within the project of the same name - 'PvSTATEM', which is an international project aiming for malaria elimination.
 BugReports: https://github.com/mini-pw/PvSTATEM/issues
-Version: 0.2.1
+Version: 0.2.2
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 Authors@R: c(
@@ -26,7 +26,7 @@ VignetteBuilder: knitr
 URL: https://github.com/mini-pw/PvSTATEM,
         https://mini-pw.github.io/PvSTATEM/
 NeedsCompilation: no
-Packaged: 2025-01-27 11:06:45 UTC; tymot
+Packaged: 2025-02-27 00:16:12 UTC; tymot
 Author: Tymoteusz Kwiecinski [aut, cre]
     (<https://orcid.org/0009-0006-7362-9821>),
   Jakub Grzywaczewski [aut],
@@ -35,4 +35,4 @@ Author: Tymoteusz Kwiecinski [aut, cre]
   Nuno Sepulveda [ths] (<https://orcid.org/0000-0002-8542-1706>)
 Maintainer: Tymoteusz Kwiecinski <tymoteuszkwiecinski@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-01-27 11:20:03 UTC
+Date/Publication: 2025-02-27 00:30:02 UTC

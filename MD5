@@ -1,4 +1,4 @@
-df37d9d42ff6dbe685419788eac58ced *DESCRIPTION
+da3f375e9dba4998520ca429e6056ada *DESCRIPTION
 c3d8557158c1810a7ee2575e8fbad382 *LICENSE
 617a70013bf7717c36eb0f48d1d54082 *NAMESPACE
 47122025265a9bd33a991e03a35fd0f9 *R/classes-model.R
@@ -19,11 +19,11 @@ b6113e4ba50bc8b81a0df1d814239a09 *R/plots-standard_curve.R
 f72b227f2cf9f8268a022440e87bd91e *R/process-dir.R
 d5dfe799f7178aaeadb44b67dc92cd17 *R/process-file.R
 618929255a413d0134f7015da454212f *R/process-plate.R
-81016774f5a82f63d406821f3e71be0d *README.md
+6a38bf7735c6b33211b04d3c17d01a99 *README.md
 5571281b2dfa7b1555149a6e676a9142 *build/vignette.rds
 0cdcf9ec8723b0d802284cbd6e340bf4 *inst/doc/example_script.R
 b19ab8e840a5605ab5483670bbb0ea2a *inst/doc/example_script.Rmd
-a49a66c8004cb1afc17b2443b182a354 *inst/doc/example_script.html
+bb1d3a01ad6b59b0efac8db30ba23a77 *inst/doc/example_script.html
 ba0d83923af38f4705ff0315d2d50050 *inst/extdata/CovidOISExPONTENT.csv
 50cf560cade437c2fd7ae4ad70b76054 *inst/extdata/CovidOISExPONTENT_CO.csv
 3a8488d2f80dff8e8e2a0d1132b62230 *inst/extdata/CovidOISExPONTENT_CO_layout.xlsx
@@ -38,8 +38,8 @@ d6ca0b096c82156b8360923ca56fc54e *inst/extdata/external/Chul_TotalIgG_2.csv
 d1f6b8515c97adaef4a199a471b7abdd *inst/extdata/external/New_Batch_14_20140513_082522.csv
 13157c7e3a02d24b385167bc1ac889ab *inst/extdata/external/New_Batch_6_20160309_174224.csv
 6357a2ea25f6a8e8d28f31c6348cd937 *inst/extdata/external/pone.0187901.s001.csv
-ecb693efb12fcacd69aaf19dc56b5adc *inst/extdata/multiplate_lite/CovidOISExPONTENT.csv
-ecb693efb12fcacd69aaf19dc56b5adc *inst/extdata/multiplate_lite/CovidOISExPONTENT2.csv
+da3ab0288e0593e62cbe81b8b0c10deb *inst/extdata/multiplate_lite/CovidOISExPONTENT.csv
+8242e3cc3ca0b4da381471619c6f7316 *inst/extdata/multiplate_lite/CovidOISExPONTENT2.csv
 c35f45e27d6a22f4aa5106030d567dea *inst/extdata/multiplate_lite/CovidOISExPONTENT2_layout.csv
 c35f45e27d6a22f4aa5106030d567dea *inst/extdata/multiplate_lite/CovidOISExPONTENT_layout.csv
 98fe1e4eea0f11222245d44fa577f4aa *inst/extdata/multiplate_mock/other/random2_xponent.csv
@@ -60,6 +60,7 @@ f2d7a56c4d8281e59043b9add76e5067 *inst/extdata/random_intelliflex.csv
 d880d8798b2450e0d1ab5269f489ebd9 *inst/extdata/random_layout_no_standard_curve.xlsx
 be279339738478891878c639819688d8 *inst/extdata/random_no_standard_curve.csv
 245088fad4d6d2ca90db897ad63ff780 *inst/img/96_well_plate.png
+097f724e4f97b44314f6a6a1f2ccc068 *inst/img/overview.png
 f657f5baba6fa834af5b4ff03dd07629 *inst/templates/levey_jennings_report_template.Rmd
 bf7ae68de59e6bbd326c364748f7ff62 *inst/templates/plate_report_template.Rmd
 35b56502cdabc642cca2c0600a9afa7a *man/Model.Rd
